@@ -99,9 +99,9 @@ class PmsProductAttributeCategoryController extends AdminController
         $pageNum = (int)$this->request->input('pageNum', 1);
         $pageSize = (int)$this->request->input('pageSize', 5);
 
-        $productAttributeCategoryList = $this->productAttributeCategoryService->getList($pageSize, $pageNum);
+        $list = $this->productAttributeCategoryService->queryList([], $pageSize, $pageNum);
 
-        return $this->success($productAttributeCategoryList);
+        return $this->success($list);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Portal;
+namespace App\Controller\Api;
 
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;

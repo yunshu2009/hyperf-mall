@@ -10,6 +10,8 @@ use Hyperf\DbConnection\Db;
 
 class PmsProductAttributeCategoryService extends Service implements PmsProductAttributeCategoryServiceInterface
 {
+    protected $model = 'PmsProductAttributeCategory';
+
     public function create(string $name) : PmsProductAttributeCategory
     {
         $productAttributeCategory = PmsProductAttributeCategory::create([
@@ -38,21 +40,6 @@ class PmsProductAttributeCategoryService extends Service implements PmsProductAt
         $pmsProductAttributeCategory = $this->transform(PmsProductAttributeCategory::find($id)->toArray());
 
         return $pmsProductAttributeCategory;
-    }
-
-    public function getList(int $pageSize, int $pageNum) : array
-    {
-        $total = PmsProductAttributeCategory::query()->count();
-
-        $page = $this->getPageInfo($pageNum, $pageSize, $total);
-
-        $page['list'] = $this->transform(PmsProductAttributeCategory::query()
-                        ->skip((int)($page['pageNum']*$page['pageSize']))
-                        ->take((int)$page['pageSize'])
-                        ->get()
-                        ->toArray());
-
-        return $page;
     }
 
     public function getListWithAttr() : array

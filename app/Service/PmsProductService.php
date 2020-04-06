@@ -20,6 +20,8 @@ use Hyperf\Utils\Arr;
 
 class PmsProductService extends Service implements PmsProductServiceInterface
 {
+    protected $model = 'PmsProduct';
+
     public function create(array $pmsProductParam) : ?PmsProduct
     {
         $pmsProduct = null;
@@ -113,11 +115,6 @@ class PmsProductService extends Service implements PmsProductServiceInterface
     public function update($id, $productParam) : int
     {
         return 1;
-    }
-
-    public function list($productQueryParam, $pageNum, $pageSize) : array
-    {
-        return [];
     }
 
     public function simpleList(string $keyword) : array

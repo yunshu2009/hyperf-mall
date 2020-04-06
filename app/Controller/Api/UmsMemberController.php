@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Portal;
+namespace App\Controller\Api;
 
 use App\Constants\ResultCode;
 use App\Request\UserLoginRequest;

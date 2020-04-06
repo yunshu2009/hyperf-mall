@@ -14,7 +14,7 @@ namespace App\Exception\Handler;
 
 use App\Constants\ResultCode;
 use App\Exception\BusinessException;
-use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Logger\LoggerFactory;
 use Hyperf\Database\Model\ModelNotFoundException;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -25,13 +25,13 @@ use Throwable;
 class AppExceptionHandler extends ExceptionHandler
 {
     /**
-     * @var StdoutLoggerInterface
+     * @var \Psr\Logger\LoggerInterface
      */
     protected $logger;
 
-    public function __construct(StdoutLoggerInterface $logger)
+    public function __construct(LoggerFactory $loggerFactory)
     {
-        $this->logger = $logger;
+        $this->logger = $loggerFactory->get('default');
     }
 
     public function handle(Throwable $throwable, ResponseInterface $response)
@@ -40,6 +40,7 @@ class AppExceptionHandler extends ExceptionHandler
             $httpStatus = $throwable->getHttpStatusCode();
 
             $data = json_encode([
+                'traceid'   =>    TRACE_ID,
                 'code'      =>    $throwable->getCode(),
                 'message'   =>    $throwable->getMessage(),
                 'status'    =>    $httpStatus,
@@ -47,6 +48,7 @@ class AppExceptionHandler extends ExceptionHandler
         } elseif ($throwable instanceof ValidationException) { // 框架业务逻辑异常
             $httpStatus = 400;
             $data = json_encode([
+                'traceid'   =>    TRACE_ID,
                 'status' => ResultCode::VALIDATE_FAILED,
                 'message' => current(collect($throwable->errors())->first()),
                 'status'    =>    $httpStatus,
@@ -54,6 +56,7 @@ class AppExceptionHandler extends ExceptionHandler
         } elseif ($throwable instanceof ModelNotFoundException) {
             $httpStatus = 404;
             $data = json_encode([
+                'traceid'   =>    TRACE_ID,
                 'code' => ResultCode::FAILED,
                 'message' => '数据不存在',
                 'status'    =>    $httpStatus,
@@ -61,12 +64,13 @@ class AppExceptionHandler extends ExceptionHandler
         } else { // 系统异常
             $httpStatus = 500;
             $data = json_encode([
+                'traceid'   =>    TRACE_ID,
                 'code'      => ResultCode::SYSTEMERR,
                 'message'   => '系统异常',
                 'status'    =>  $httpStatus,
             ], JSON_UNESCAPED_UNICODE);
 
-            $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
+            $this->logger->error(sprintf('%s - %s[%s] in %s', TRACE_ID, $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
             $this->logger->error($throwable->getTraceAsString());
         }
 

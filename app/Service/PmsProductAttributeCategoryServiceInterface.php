@@ -16,7 +16,5 @@ interface PmsProductAttributeCategoryServiceInterface
 
     public function getItem(int $id) : array;
 
-    public function getList(int $pageSize, int $pageNum) : array;
-
     public function getListWithAttr() : array;
 }

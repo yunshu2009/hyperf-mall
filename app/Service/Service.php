@@ -10,6 +10,35 @@ use Hyperf\Utils\Str;
 
 abstract class Service
 {
+    protected $model;
+
+    protected function queryList($condition=[], $pageNum=0, $pageSize=0, $order='id', $sort='desc', $with=[]) : array
+    {
+        $list = [];
+        $class = '\\App\\Model\\'.$this->model;
+        $model = new $class;
+
+        $query = $model->query();
+
+        if ($condition) {
+            $query->where($condition);
+        }
+        if ($pageNum && $pageSize) {
+            $total = $query->count();
+            $page = $this->getPageInfo($pageNum, $pageSize, $total);
+            $query =  $query->skip((int)($page['pageNum']*$page['pageSize']))->take((int)$page['pageSize']);
+            $list = $page;
+        }
+        if ($order && $sort) {
+            $query = $query->orderBy($order, $sort);
+        }
+
+        $obj = $query->get();
+        $list['list'] =  $obj ? $obj->toArray() : [];
+
+        return $list;
+    }
+
     protected function transform(array $arr) : array
     {
         $newArr = [];

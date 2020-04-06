@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Portal;
+namespace App\Controller\Api;
 
 use App\Request\Portal\OmsCartItemRequest;
 use App\Request\Portal\OmsCartItemUpdateQuantityRequest;

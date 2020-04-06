@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Portal;
+namespace App\Controller\Api;
 
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 
-class OmsPortalOrderReturnApplyController
+class MemberReadHistoryController
 {
     public function index(RequestInterface $request, ResponseInterface $response)
     {

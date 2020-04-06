@@ -43,6 +43,30 @@ abstract class Controller
      */
     protected $response;
 
+    protected $validated;
+
+    protected function validateInput($rules, $messages=[])
+    {
+        $requests = $this->request->all();
+
+        $factory = $this->container->get(\Hyperf\Validation\Contracts\Validation\Factory::class);
+
+        $validator = $factory->make(
+            $requests,
+            $rules,
+            $messages
+        );
+
+        if (! $validator->passes()) {
+            $validator->errors->first();
+            return $this->error('非法请求', ResultCode::VALIDATE_FAILED);
+        } else {
+            $this->validated = array_intersect_key($requests, $rules);
+            $this->validated = $requests ;
+            return false;
+        }
+    }
+
     public function success($data=[], $message='操作成功', $code=200)
     {
         return $this->reponse($data, $message, $code);
@@ -55,13 +79,15 @@ abstract class Controller
 
     public function reponse($data, $message, $code, $statusCode=200)
     {
-        $data = json_encode([
+        $data = [
+            'traceid'   =>  TRACE_ID,
             'code'  =>  $code,
             'message'   =>  $message,
             'data'  =>  $data,
-        ], 320);
+        ];
+        $json = json_encode($data, 320);
 
-        return $this->response->withStatus($statusCode)->withHeader('Content-Type', 'application/json')->withBody(new SwooleStream($data));
+        return $this->response->withStatus($statusCode)->withHeader('Content-Type', 'application/json')->withBody(new SwooleStream($json));
     }
 
     /**

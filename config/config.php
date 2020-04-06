@@ -27,4 +27,5 @@ return [
             LogLevel::WARNING,
         ],
     ],
+    'env'   =>  env('APP_ENV', 'dev'),  //dev qa  prod
 ];

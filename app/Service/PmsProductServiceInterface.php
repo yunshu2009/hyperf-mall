@@ -14,8 +14,6 @@ interface PmsProductServiceInterface
 
     public function update($id, $productParam) : int;
 
-    public function list($productQueryParam, $pageNum, $pageSize) : array;
-
     public function simpleList(string $keyword) : array;
 
     public function updateVerifyStatus(array $ids, int $verifyStatus) : int;

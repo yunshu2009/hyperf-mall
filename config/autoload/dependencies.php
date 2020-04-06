@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Service;
 use App\Service\OmsPromotionServiceInterface;
+use App\Service\SmsGroupServiceInterface;
 
 /**
  * This file is part of Hyperf.
@@ -31,5 +32,6 @@ return [
     Service\OmsPromotionServiceInterface::class                     =>  Service\OmsPromotionService::class,
     Service\UmsMemberReceiveAddressServiceInterface::class          =>  Service\UmsMemberReceiveAddressService::class,
     Service\OmsPortalOrderServiceInterface::class                   => Service\OmsPortalOrderService::class,
-    Service\UmsMemberCollectionServiceInterface::class              => Service\UmsMemberCollectionService::class
+    Service\UmsMemberCollectionServiceInterface::class              => Service\UmsMemberCollectionService::class,
+    Service\SmsGroupServiceInterface::class                         =>  Service\SmsGroupService::class,
 ];

@@ -4,22 +4,32 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Model\CmsSubject;
-use App\Model\PmsBrand;
 use App\Model\PmsProduct;
 use App\Model\PmsProductCategory;
 use App\Model\SmsFlashPromotion;
 use App\Model\SmsFlashPromotionSession;
-use Carbon\Carbon;
 use Hyperf\Di\Annotation\Inject;
 use App\Model\SmsHomeAdvertise;
 
 class HomeService extends Service implements HomeServiceInterface
 {
     /**
-     * @Inject
+     * @Inject()
      * @var \App\Dao\HomeDao
      */
     private $homeDao;
+
+    /**
+     * @Inject()
+     * @var \App\Service\PmsProductAttributeCategoryServiceInterface
+     */
+    private $pmsProductAttributeCategoryService;
+
+    /**
+     * @Inject()
+     * @var \App\Service\PmsProductServiceInterface
+     */
+    private $pmsProductService;
 
     /**
      * @return array
@@ -28,11 +38,12 @@ class HomeService extends Service implements HomeServiceInterface
     {
         $homeResult = [
             'advertiseList'         =>  [],  // 轮播广告
-            'brandList'             =>  [], // 推荐品牌
-            'homeFlashPromotion'    =>  [], // 当前秒杀场次
-            'newProductList'        =>  [], // 新品推荐
-            'hotProductList'        =>  [], // 人气推荐
-            'subjectList'           =>  [], // 推荐专题
+            'brandList'             =>  [],  // 推荐品牌
+            'homeFlashPromotion'    =>  [],  // 当前秒杀场次
+            'newProductList'        =>  [],  // 新品推荐
+            'hotProductList'        =>  [],  // 人气推荐
+            'subjectList'           =>  [],  // 推荐专题
+            'catList'               =>  [],
         ];
 
         // 获取首页广告
@@ -47,8 +58,33 @@ class HomeService extends Service implements HomeServiceInterface
         $homeResult['hotProductList'] = $this->homeDao->getHotProductList(0, 4);
         // 获取推荐专题
         $homeResult['subjectList'] = $this->homeDao->getRecommendSubjectList(0, 4);
+        // 分类精选商品
+//        $homeResult['catList'] = $this->getProductAttributeCategoryList();
 
         return $this->transform($homeResult);
+    }
+
+
+    private function getProductAttributeCategoryList()
+    {
+        $list = $this->pmsProductAttributeCategoryService->queryList([], 0, 0);
+
+        $categoryList = [];
+        foreach ($list['list'] as $vo) {
+            $condition = [
+                'product_attribute_category_id' =>  $vo['id'],
+                'publish_status'                =>  1,
+                'verify_status'                =>  1,
+            ];
+            $goodsList = $this->pmsProductService->queryList($condition, 1, 8);
+
+            $categoryList[] = [
+                'name'      =>  $vo['name'],
+                'goodsList' =>  $goodsList['list'],
+            ];
+        }
+
+        return $categoryList;
     }
 
     private function getHomeAdvertiseList() : array

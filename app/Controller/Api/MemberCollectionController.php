@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Portal;
+namespace App\Controller\Api;
 
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\RequestMapping;
@@ -28,11 +28,11 @@ class MemberCollectionController
      */
     public function addProduct()
     {
-        $count = $this->memberCollectionService->addProduct($productCollection);
-        if ($count > 0) {
-            return $this->success($count);
-        } else {
-            return $this->error();
-        }
+//        $count = $this->memberCollectionService->addProduct($productCollection);
+//        if ($count > 0) {
+//            return $this->success($count);
+//        } else {
+//            return $this->error();
+//        }
     }
 }

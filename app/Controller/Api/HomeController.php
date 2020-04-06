@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Portal;
+namespace App\Controller\Api;
 
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -13,7 +13,7 @@ use App\Service\HomeServiceInterface;
 /**
  * 首页内容管理
  * Class HomeController
- * @Controller(prefix="home")
+ * @Controller(prefix="api/home")
  * @package App\Controller\Portal
  */
 class HomeController extends \App\Controller\Controller
@@ -32,7 +32,6 @@ class HomeController extends \App\Controller\Controller
     public function getContent() : ResponseInterface
     {
         $content = $this->homeService->getContent();
-
         return $this->success($content);
     }
 
