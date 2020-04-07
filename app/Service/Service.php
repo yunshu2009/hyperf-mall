@@ -12,7 +12,7 @@ abstract class Service
 {
     protected $model;
 
-    protected function queryList($condition=[], $pageNum=0, $pageSize=0, $order='id', $sort='desc', $with=[]) : array
+    protected function queryList($condition=[], $pageNum=0, $pageSize=0, $order='id', $sort='desc', $with=[], $select=[]) : array
     {
         $list = [];
         $class = '\\App\\Model\\'.$this->model;
@@ -20,6 +20,9 @@ abstract class Service
 
         $query = $model->query();
 
+        if ($with) {
+            $query->with($with);
+        }
         if ($condition) {
             $query->where($condition);
         }
@@ -32,7 +35,10 @@ abstract class Service
         if ($order && $sort) {
             $query = $query->orderBy($order, $sort);
         }
-
+        $select = $select ? $select : $this->select;
+        if ($select) {
+            $query = $query->select($select);
+        }
         $obj = $query->get();
         $list['list'] =  $obj ? $obj->toArray() : [];
 

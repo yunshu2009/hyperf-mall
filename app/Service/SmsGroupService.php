@@ -5,6 +5,7 @@ namespace App\Service;
 class SmsGroupService extends Service implements SmsGroupServiceInterface
 {
     protected $model = 'SmsGroup';
+    protected $select = ['id', 'goods_id', 'goods_name', 'origin_price', 'group_price', 'start_time', 'end_time', 'hours', 'peoples'];
 
     public function getList(array $attributes)
     {
@@ -18,7 +19,7 @@ class SmsGroupService extends Service implements SmsGroupServiceInterface
         ];
         $with = [
             'goods' =>  function($query) {
-                $query->select('*');
+                $query->select(['id', 'name', 'pic', 'product_sn']);
             }
         ];
 
