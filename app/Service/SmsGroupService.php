@@ -4,10 +4,12 @@ namespace App\Service;
 
 class SmsGroupService extends Service implements SmsGroupServiceInterface
 {
+    protected $model = 'SmsGroup';
+
     public function getList(array $attributes)
     {
-        $attributes['pageNum']  = $attributes['pageNum'] ?? 1;
-        $attributes['pageSize'] = $attributes['pageSize'] ?? 10;
+        $attributes['pageNum']  = (int)$attributes['pageNum'] ?? 1;
+        $attributes['pageSize'] = (int)$attributes['pageSize'] ?? 10;
 
         $now = date('Y-m-d H:i:s');
         $condition = [

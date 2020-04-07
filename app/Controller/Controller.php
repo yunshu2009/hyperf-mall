@@ -21,6 +21,7 @@ use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Utils\Str;
+use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 use Psr\Container\ContainerInterface;
 
 abstract class Controller
@@ -45,20 +46,24 @@ abstract class Controller
 
     protected $validated;
 
+    /**
+     * @Inject()
+     * @var ValidatorFactoryInterface
+     */
+    protected $validationFactory;
+
     protected function validateInput($rules, $messages=[])
     {
         $requests = $this->request->all();
 
-        $factory = $this->container->get(\Hyperf\Validation\Contracts\Validation\Factory::class);
-
-        $validator = $factory->make(
+        $validator = $this->validationFactory->make(
             $requests,
             $rules,
             $messages
         );
 
-        if (! $validator->passes()) {
-            $validator->errors->first();
+        if ($validator->fails()) {
+            $validator->errors()->first();
             return $this->error('非法请求', ResultCode::VALIDATE_FAILED);
         } else {
             $this->validated = array_intersect_key($requests, $rules);
