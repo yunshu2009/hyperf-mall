@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Library;
 
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Logger\Logger;
 
-class JWT
+class Jwt
 {
     /**
      * @var array $header

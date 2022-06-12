@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * This file is part of Hyperf.
  *
@@ -25,7 +26,7 @@ use Throwable;
 class AppExceptionHandler extends ExceptionHandler
 {
     /**
-     * @var \Psr\Logger\LoggerInterface
+     * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
@@ -40,7 +41,6 @@ class AppExceptionHandler extends ExceptionHandler
             $httpStatus = $throwable->getHttpStatusCode();
 
             $data = json_encode([
-                'traceid'   =>    TRACE_ID,
                 'code'      =>    $throwable->getCode(),
                 'message'   =>    $throwable->getMessage(),
                 'status'    =>    $httpStatus,
@@ -48,15 +48,12 @@ class AppExceptionHandler extends ExceptionHandler
         } elseif ($throwable instanceof ValidationException) { // 框架业务逻辑异常
             $httpStatus = 400;
             $data = json_encode([
-                'traceid'   =>    TRACE_ID,
                 'status' => ResultCode::VALIDATE_FAILED,
-                'message' => current(collect($throwable->errors())->first()),
-                'status'    =>    $httpStatus,
+                'message' => current((array)collect($throwable->errors())->first()),
             ], JSON_UNESCAPED_UNICODE);
         } elseif ($throwable instanceof ModelNotFoundException) {
             $httpStatus = 404;
             $data = json_encode([
-                'traceid'   =>    TRACE_ID,
                 'code' => ResultCode::FAILED,
                 'message' => '数据不存在',
                 'status'    =>    $httpStatus,
@@ -64,13 +61,12 @@ class AppExceptionHandler extends ExceptionHandler
         } else { // 系统异常
             $httpStatus = 500;
             $data = json_encode([
-                'traceid'   =>    TRACE_ID,
                 'code'      => ResultCode::SYSTEMERR,
                 'message'   => '系统异常',
                 'status'    =>  $httpStatus,
             ], JSON_UNESCAPED_UNICODE);
 
-            $this->logger->error(sprintf('%s - %s[%s] in %s', TRACE_ID, $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
+            $this->logger->error(sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile()));
             $this->logger->error($throwable->getTraceAsString());
         }
 
