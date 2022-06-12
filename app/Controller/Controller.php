@@ -85,7 +85,6 @@ abstract class Controller
     public function reponse($data, $message, $code, $statusCode=200)
     {
         $data = [
-            'traceid'   =>  TRACE_ID,
             'code'  =>  $code,
             'message'   =>  $message,
             'data'  =>  $data,
@@ -134,5 +133,15 @@ abstract class Controller
         list($member, $payload) = $check;
 
         return $member;
+    }
+
+    public function getSafePageNum(int $pageNum=1)
+    {
+        return ($pageNum > 0) ? $pageNum : 1;
+    }
+
+    public function getSafePageSize(int $pageSize, int $default=10)
+    {
+        return ($pageSize<100 && $pageSize>0) ? $pageSize : $default;
     }
 }
