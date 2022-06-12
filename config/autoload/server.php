@@ -48,7 +48,7 @@ return [
         'open_http2_protocol' => true,
         'max_request' => 100000,
         'socket_buffer_size' => 2 * 1024 * 1024,
-        'daemonize' => 1
+        'daemonize' => 0
     ],
     'callbacks' => [
         Event::ON_BEFORE_START => [Hyperf\Framework\Bootstrap\ServerStartCallback::class, 'beforeStart'],
