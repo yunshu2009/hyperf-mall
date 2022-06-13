@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Api;
 
 use App\Model\PmsBrand;
+use App\Model\PmsProduct;
 use App\Service\Service;
 use Hyperf\DbConnection\Db;
 
@@ -41,5 +42,22 @@ class PmsBrandService extends Service implements PmsBrandServiceInterface
     public function detail(int $brandId)
     {
         return PmsBrand::where('id', $brandId)->get();
+    }
+
+    /**
+     * @param int $brandId
+     * @param int $pageNum
+     * @param int $pageSize
+     *
+     * @return array
+     */
+    public function productList(int $brandId, int $pageNum, int $pageSize) : array
+    {
+        return PmsProduct::where('brand_id', $brandId)
+                        ->where('delete_status', 0)
+                        ->skip(($pageNum-1)*$pageSize)
+                        ->take($pageSize)
+                        ->get()
+                        ->toArray();
     }
 }

@@ -48,4 +48,26 @@ class PmsBrandController extends \App\Controller\Controller
 
         return $this->success($brandList);
     }
+
+    /**
+     * 获取品牌产品列表
+     * @RequestMapping(path = "productList", method = "get")
+     */
+    public function productList(RequestInterface $request)
+    {
+        $rules = [
+            'brandId'      =>  'required|int|min:1',
+        ];
+        if ($error = $this->validateInput($rules)) {
+            return $error;
+        }
+
+        $brandId = intval($request->input('brandId'));
+        $pageSize = $this->getSafePageSize($request->input('pageSize', 10));
+        $pageNum = $this->getSafePageNum($request->input('pageNum', 1));
+
+        $brandList = $this->brandService->productList($brandId, $pageNum, $pageSize);
+
+        return $this->success($brandList);
+    }
 }
