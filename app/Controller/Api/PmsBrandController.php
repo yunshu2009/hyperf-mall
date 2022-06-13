@@ -37,4 +37,15 @@ class PmsBrandController extends \App\Controller\Controller
 
         return $this->success($brandList);
     }
+
+    /**
+     * 获取品牌详情
+     * @RequestMapping(path="detail/{id:\d+}", method="get")
+     */
+    public function detail(int $id) : ResponseInterface
+    {
+        $brandList = $this->brandService->detail($id);
+
+        return $this->success($brandList);
+    }
 }
