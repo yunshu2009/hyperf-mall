@@ -7,7 +7,7 @@ namespace App\Controller\Api;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Hyperf\HttpServer\Annotation\Controller;
-use App\Service\UmsMemberCollectionServiceInterface;
+use App\Service\Api\MemberCollectionServiceInterface;
 
 /**
  * 会员登录注册管理
@@ -19,7 +19,7 @@ class MemberCollectionController
 {
     /**
      * @Inject()
-     * @var UmsMemberCollectionServiceInterface
+     * @var MemberCollectionServiceInterface
      */
     private $memberCollectionService;
     /**

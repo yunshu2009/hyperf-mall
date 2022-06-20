@@ -8,7 +8,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Psr\Http\Message\ResponseInterface;
-use App\Service\HomeServiceInterface;
+use App\Service\Api\HomeServiceInterface;
 
 /**
  * 首页内容管理
